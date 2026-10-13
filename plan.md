@@ -43,6 +43,33 @@ Humans and agents only ever write to Git; Argo CD is the single path into the cl
 7. **AI layer**: model gateway, HolmesGPT, tack-ai remediation, kagent.
 8. **Portfolio finish**: profile README, pins, ADRs.
 
+## Status (as of 2026-10-13)
+
+Progress through the shared build order:
+
+- [x] 1. **skylab-gitops** — bootstrap, skylab-apps renderer, CI pipeline, waves -2 → 0 landed. Next: wave 1 (Crossplane + providers).
+- [ ] 2. **skylab-terraform** — not started. Blocks real cloud identity for ClusterSecretStores and provider auth.
+- [ ] 3. **skylab-backstage** — not started.
+- [ ] 4. **skylab-crossplane** — not started. The gitops wave 2 Application will pin an OCI package built from this repo.
+- [ ] 5. Archive the old repos
+- [ ] 6. Golden paths
+- [ ] 7. AI layer
+- [ ] 8. Portfolio finish
+
+### Deferred wiring in skylab-gitops
+
+Blocked on cloud identity from `skylab-terraform`:
+
+- cert-manager ClusterIssuers (`StepClusterIssuer` + ACME Let's Encrypt)
+- trust-manager Bundle distributing the step-ca root
+- external-secrets ClusterSecretStores (AWS Secrets Manager, GCP Secret Manager)
+- step-ca provisioner secrets via ExternalSecret
+
+### Deferred CI work in skylab-gitops
+
+- OCI push to GHCR on main
+- Rendered-diff PR comment on PRs
+
 ---
 
 ## This repo
