@@ -47,23 +47,30 @@ Humans and agents only ever write to Git; Argo CD is the single path into the cl
 
 Progress through the shared build order:
 
-- [x] 1. **skylab-gitops** — bootstrap, skylab-apps renderer, CI pipeline, waves -2 → 0 landed. Next: wave 1 (Crossplane + providers).
-- [ ] 2. **skylab-terraform** — not started. Blocks real cloud identity for ClusterSecretStores and provider auth.
+- [x] 1. **skylab-gitops** — bootstrap, skylab-apps renderer, CI pipeline, waves -2 → 1 landed. Next: close the deferred wave-0 wiring (now unblocked by terraform), then wave 2 pin or wave 3 KubeVela.
+- [x] 2. **skylab-terraform** — substantively complete. Seven stacks (bootstrap, identity, storage, roles-anywhere, crossplane, qdevice, gcp-identity) and five modules (aws-github-oidc, aws-object-storage, aws-roles-anywhere, aws-ecs-service, gcp-workload-identity) with fmt/validate/tflint/trivy CI. Modules consistently cloud-prefixed. Follow-ups below.
 - [ ] 3. **skylab-backstage** — not started.
 - [ ] 4. **skylab-crossplane** — not started. The gitops wave 2 Application will pin an OCI package built from this repo.
 - [ ] 5. Archive the old repos
 - [ ] 6. Golden paths
-- [ ] 7. AI layer
+- [ ] 7. AI layer (includes tack-ai)
 - [ ] 8. Portfolio finish
 
-### Deferred wiring in skylab-gitops
+### Deferred wiring in skylab-gitops (now unblocked)
 
-Blocked on cloud identity from `skylab-terraform`:
+Terraform's `stacks/roles-anywhere` is live, so these can land next:
 
 - cert-manager ClusterIssuers (`StepClusterIssuer` + ACME Let's Encrypt)
 - trust-manager Bundle distributing the step-ca root
 - external-secrets ClusterSecretStores (AWS Secrets Manager, GCP Secret Manager)
 - step-ca provisioner secrets via ExternalSecret
+
+### Deferred follow-ups in skylab-terraform
+
+- Tighten scaffold policies: ESO `SecretsManagerReadWrite`, `terraform-ci` role `AdministratorAccess`, GCP SAs on `roles/owner`/`roles/editor`.
+- Port the actual qdevice container logic from `shoutsky-images/images/proxmox-qdevice`.
+- qdevice image build+push CI.
+- Retire `terraform/development/` legacy content once nothing references it.
 
 ### Deferred CI work in skylab-gitops
 
