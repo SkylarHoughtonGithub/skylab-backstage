@@ -43,13 +43,13 @@ Humans and agents only ever write to Git; Argo CD is the single path into the cl
 7. **AI layer**: model gateway, HolmesGPT, tack-ai remediation, kagent.
 8. **Portfolio finish**: profile README, pins, ADRs.
 
-## Status (as of 2026-10-13)
+## Status (as of 2026-10-15)
 
 Progress through the shared build order:
 
-- [x] 1. **skylab-gitops** — bootstrap, skylab-apps renderer, CI pipeline, waves -2 → 1 landed. Next: close the deferred wave-0 wiring (now unblocked by terraform), then wave 2 pin or wave 3 KubeVela.
+- [x] 1. **skylab-gitops** — bootstrap, skylab-apps renderer (now with `sourceType: directory` for raw-manifest workloads), CI pipeline, local k3d dev loop, Renovate, wrapper charts through wave 5 (skipping wave 2), plus the first wave-10 workload (`workloads/demo-service/`) that proves cert-manager (StepClusterIssuer) + Tempo (OTel traces) + Sloth (PrometheusServiceLevel) end-to-end in dev. Wave-0 wiring resources (StepClusterIssuer + ACME + trust-manager Bundle + ESO ClusterSecretStores + step-ca provisioner ExternalSecret) ship as values-gated opt-ins; homelab has trust-manager Bundle flipped on, the rest remain off pending real inputs.
 - [x] 2. **skylab-terraform** — substantively complete. Seven stacks (bootstrap, identity, storage, roles-anywhere, crossplane, qdevice, gcp-identity) and five modules (aws-github-oidc, aws-object-storage, aws-roles-anywhere, aws-ecs-service, gcp-workload-identity) with fmt/validate/tflint/trivy CI. Modules consistently cloud-prefixed. Follow-ups below.
-- [ ] 3. **skylab-backstage** — not started.
+- [ ] 3. **skylab-backstage** — in progress. Backstage app scaffolded under `app/` (`@backstage/create-app` baseline, yarn Berry 4.x, Node 22/24). No plugins, templates, Dockerfile CI, or chart wrapper yet. Next: Dockerfile + GHCR image CI, then the custom `gitea:pull-request` scaffolder action.
 - [ ] 4. **skylab-crossplane** — not started. The gitops wave 2 Application will pin an OCI package built from this repo.
 - [ ] 5. Archive the old repos
 - [ ] 6. Golden paths
