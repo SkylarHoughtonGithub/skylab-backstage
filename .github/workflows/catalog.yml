@@ -1,0 +1,40 @@
+name: catalog
+
+on:
+  pull_request:
+    paths:
+      - 'app/catalog/**'
+      - 'app/catalog-info.yaml'
+      - '.github/workflows/catalog.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'app/catalog/**'
+      - 'app/catalog-info.yaml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: entity validator
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        file:
+          - app/catalog-info.yaml
+          - app/catalog/org.yaml
+          - app/catalog/domains.yaml
+          - app/catalog/systems.yaml
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: validate ${{ matrix.file }}
+        uses: RoadieHQ/backstage-entity-validator@v0.6.0
+        with:
+          path: ${{ matrix.file }}

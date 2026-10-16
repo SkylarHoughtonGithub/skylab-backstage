@@ -1,0 +1,60 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: skylab-gitops
+  description: Argo CD delivery hub — wrapper charts, sync waves, per-cluster config, workloads.
+  links:
+    - url: https://github.com/SkylarHoughtonGithub/skylab-gitops
+      title: Repository
+spec:
+  owner: platform
+  domain: delivery
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: skylab-terraform
+  description: AWS/GCP foundations — OIDC, workload identity, buckets, Roles Anywhere, qdevice.
+  links:
+    - url: https://github.com/SkylarHoughtonGithub/skylab-terraform
+      title: Repository
+spec:
+  owner: platform
+  domain: infrastructure
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: skylab-crossplane
+  description: Cloud-agnostic XRDs (KubernetesCluster, postgres, bucket) packaged as OCI.
+  links:
+    - url: https://github.com/SkylarHoughtonGithub/skylab-crossplane
+      title: Repository
+spec:
+  owner: platform
+  domain: infrastructure
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: skylab-backstage
+  description: Backstage app, image, chart, templates, MCP actions.
+  links:
+    - url: https://github.com/SkylarHoughtonGithub/skylab-backstage
+      title: Repository
+spec:
+  owner: platform
+  domain: developer-experience
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: tack-ai
+  description: Governed remediation agent — proposes fixes as PRs behind policy and approval.
+  links:
+    - url: https://github.com/SkylarHoughtonGithub/tack-ai
+      title: Repository
+spec:
+  owner: platform
+  domain: ai
