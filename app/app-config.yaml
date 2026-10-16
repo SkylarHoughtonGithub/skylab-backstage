@@ -239,6 +239,21 @@ catalog:
       rules:
         - allow: [System]
 
+# Roadie's Argo CD plugin — surfaces sync/health per entity. Each instance
+# listed here is a separate Argo CD API endpoint; a single Backstage can
+# query multiple fleets. We start with the homelab instance; spokes get
+# their own entries as they come online.
+argocd:
+  username: ${ARGOCD_USERNAME}
+  password: ${ARGOCD_PASSWORD}
+  appLocatorMethods:
+    - type: config
+      instances:
+        - name: homelab
+          url: ${ARGOCD_HOMELAB_URL}
+          # Alternative to username/password: a bearer token per instance.
+          # token: ${ARGOCD_HOMELAB_TOKEN}
+
 kubernetes:
   # Dev points at the homelab cluster. Spoke clusters get added here (or via
   # the catalog cluster-locator — see plan.md fleet section) as they come online.

@@ -8,6 +8,7 @@ metadata:
     github.com/project-slug: SkylarHoughtonGithub/skylab-backstage
     backstage.io/techdocs-ref: dir:.
     backstage.io/kubernetes-id: skylab-backstage
+    argocd/app-selector: skylab.io/system=skylab-backstage
 spec:
   type: service
   lifecycle: experimental
