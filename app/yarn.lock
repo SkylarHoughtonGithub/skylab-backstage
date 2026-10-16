@@ -5437,7 +5437,6 @@ __metadata:
     "@backstage/integration": "npm:^2.1.2"
     "@backstage/plugin-scaffolder-backend": "npm:^4.2.0"
     "@backstage/plugin-scaffolder-node": "npm:^0.13.7"
-    isomorphic-git: "npm:^1.44.0"
   languageName: unknown
   linkType: soft
 
@@ -21398,7 +21397,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"isomorphic-git@npm:^1.23.0, isomorphic-git@npm:^1.44.0":
+"isomorphic-git@npm:^1.23.0":
   version: 1.44.2
   resolution: "isomorphic-git@npm:1.44.2"
   dependencies:
