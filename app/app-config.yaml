@@ -1,5 +1,5 @@
 app:
-  title: Scaffolded Backstage App
+  title: Skylab
   baseUrl: http://localhost:3000
 
   # Enable all packages by default, this will discover packages from packages/app/package.json
@@ -96,8 +96,19 @@ app:
               width: 4
               height: 4
 
+    # Sign-in page. Guest stays enabled so local dev works without a Gitea;
+    # 'oidc' goes through @backstage/plugin-auth-backend-module-oidc-provider
+    # wired at auth.providers.oidc below. Flip guest off once Gitea is live.
+    - sign-in-page:
+        config:
+          providers:
+            - guest
+            - id: oidc
+              title: Sign in with Gitea
+              message: Use your Gitea account.
+
 organization:
-  name: My Company
+  name: Skylab
 
 backend:
   # Used for enabling authentication, secret is shared by all backend plugins
