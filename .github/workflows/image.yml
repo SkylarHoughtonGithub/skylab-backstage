@@ -99,4 +99,4 @@ jobs:
         if: github.event_name == 'push'
         env:
           DIGEST: ${{ steps.build.outputs.digest }}
-        run: cosign sign --yes "${IMAGE}@${DIGEST}"
+        run: cosign sign --yes "${IMAGE,,}@${DIGEST}"
