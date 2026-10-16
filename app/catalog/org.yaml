@@ -1,0 +1,20 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: platform
+  description: Owns the Skylab platform: GitOps delivery, infra APIs, Backstage, observability, AI.
+spec:
+  type: team
+  children: []
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: skylar
+  description: Skylab platform owner.
+spec:
+  profile:
+    displayName: Skylar Houghton
+    email: skylarhoughton1996@gmail.com
+  memberOf: [platform]

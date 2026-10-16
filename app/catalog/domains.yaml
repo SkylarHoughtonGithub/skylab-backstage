@@ -1,0 +1,32 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Domain
+metadata:
+  name: delivery
+  description: Argo CD-based GitOps delivery of everything Skylab syncs to clusters.
+spec:
+  owner: platform
+---
+apiVersion: backstage.io/v1alpha1
+kind: Domain
+metadata:
+  name: infrastructure
+  description: Cloud foundations (Terraform) and cloud-agnostic infra APIs (Crossplane).
+spec:
+  owner: platform
+---
+apiVersion: backstage.io/v1alpha1
+kind: Domain
+metadata:
+  name: developer-experience
+  description: Backstage front door, templates, MCP actions, and catalog.
+spec:
+  owner: platform
+---
+apiVersion: backstage.io/v1alpha1
+kind: Domain
+metadata:
+  name: ai
+  description: Governed remediation and investigation agents, model gateway, MCP servers.
+spec:
+  owner: platform
