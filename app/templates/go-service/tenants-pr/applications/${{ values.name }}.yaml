@@ -8,22 +8,10 @@ metadata:
 spec:
   components:
     - name: web
-      type: webservice
+      # Skylab `go-service` ComponentDefinition (charts/kubevela-defs in
+      # skylab-gitops). Bakes in OTel env to in-cluster Alloy,
+      # skylab.io/system labels, and /healthz probes — so this manifest
+      # only needs the image.
+      type: go-service
       properties:
         image: ghcr.io/platform/${{ values.name }}:latest
-        imagePullPolicy: Always
-        ports:
-          - port: 8080
-            name: http
-            expose: true
-        env:
-          - name: OTEL_SERVICE_NAME
-            value: ${{ values.name }}
-          - name: OTEL_EXPORTER_OTLP_ENDPOINT
-            value: http://alloy.monitoring.svc:4317
-          - name: OTEL_EXPORTER_OTLP_INSECURE
-            value: "true"
-      traits:
-        - type: scaler
-          properties:
-            replicas: 1
