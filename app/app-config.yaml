@@ -151,12 +151,21 @@ integrations:
       password: ${GITEA_TOKEN}
 
 proxy:
-  ### Example for how to add a proxy endpoint for the frontend.
-  ### A typical reason to do this is to handle HTTPS and CORS for internal services.
-  # endpoints:
-  #   '/test':
-  #     target: 'https://example.com'
-  #     changeOrigin: true
+  endpoints:
+    # The grafana community plugin queries dashboards / alerts via the
+    # backend proxy so credentials never hit the browser. GRAFANA_TOKEN is a
+    # service-account token with Viewer role on the target folder.
+    '/grafana/api':
+      target: ${GRAFANA_URL}
+      headers:
+        Authorization: Bearer ${GRAFANA_TOKEN}
+
+# Grafana community plugin — surfaces each entity's dashboards + alerts.
+# Uses the proxy endpoint above; `domain` is the browser-facing URL that
+# dashboard links point at. unifiedAlerting matches the Grafana 9+ default.
+grafana:
+  domain: ${GRAFANA_URL}
+  unifiedAlerting: true
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
