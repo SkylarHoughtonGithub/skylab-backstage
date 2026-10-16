@@ -1,0 +1,29 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: ${{ values.name }}
+  namespace: ${{ values.name }}
+  labels:
+    skylab.io/system: ${{ values.name }}
+spec:
+  components:
+    - name: web
+      type: webservice
+      properties:
+        image: ghcr.io/platform/${{ values.name }}:latest
+        imagePullPolicy: Always
+        ports:
+          - port: 8080
+            name: http
+            expose: true
+        env:
+          - name: OTEL_SERVICE_NAME
+            value: ${{ values.name }}
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: http://alloy.monitoring.svc:4317
+          - name: OTEL_EXPORTER_OTLP_INSECURE
+            value: "true"
+      traits:
+        - type: scaler
+          properties:
+            replicas: 1
