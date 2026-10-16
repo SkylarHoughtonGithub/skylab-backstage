@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 The Backstage app, image, chart, templates and custom plugins for Skylab. Nothing in the catalog is registered by hand: discovery finds repos, and a CI-generated root Location finds templates. See `plan.md` for the full rework plan.
 
-**Current state (2026-10-15):** fresh scaffold at `app/` from `@backstage/create-app` (yarn Berry 4.x, Node 22/24, `packages/app` + `packages/backend`, example org / entities / template still in place). No plugins, Dockerfile CI, chart wrapper, catalog, templates, or Gitea / MCP wiring yet. Local dev requires `brew install node@22` (Node 26 is unsupported) and `yarn install` inside `app/`.
+**Current state (2026-10-16):** scaffold at `app/` from `@backstage/create-app` (yarn Berry 4.x, Node 22/24, `packages/app` + `packages/backend`, example org / entities / template still in place), plus image CI at `.github/workflows/image.yml` that runs the Backstage host build and builds the shipped `app/packages/backend/Dockerfile`, scans HIGH/CRITICAL (fixed-only) with Trivy, pushes to `ghcr.io/<owner>/skylab-backstage` on `main` with SBOM + provenance, and cosign-signs keyless. Path-filtered to `app/**` + the workflow file. No plugins, chart wrapper, catalog, templates, or Gitea / MCP wiring yet. Local dev requires `brew install node@22` (Node 26 is unsupported) and `yarn install` inside `app/`.
 
 Legacy content: `tetris-react/`, `infra-templates/`, `workload-templates/` predate the rework and are migration source material.
 

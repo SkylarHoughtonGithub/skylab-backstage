@@ -1,0 +1,5 @@
+# node-tar 6.2.1 gzip-bomb DoS. Transitive dep via @backstage/* packages.
+# Fix is node-tar 7.5.19, a semver-major bump; forcing a yarn resolution
+# needs validation that no consumer uses the 6.x sync/callback API that
+# 7.x removed. Revisit once Backstage pulls node-tar 7 upstream.
+CVE-2026-59873
