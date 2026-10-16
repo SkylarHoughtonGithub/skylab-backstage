@@ -76,8 +76,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          sbom: true
-          provenance: mode=max
+          sbom: ${{ github.event_name == 'push' }}
+          provenance: ${{ github.event_name == 'push' && 'mode=max' || 'false' }}
 
       - name: trivy scan
         uses: aquasecurity/trivy-action@v0.36.0
