@@ -9,6 +9,8 @@ metadata:
     backstage.io/techdocs-ref: dir:.
     backstage.io/kubernetes-id: skylab-backstage
     argocd/app-selector: skylab.io/system=skylab-backstage
+    grafana/dashboard-selector: "tags @> 'skylab-backstage'"
+    grafana/alert-label-selector: "system=skylab-backstage"
 spec:
   type: service
   lifecycle: experimental
