@@ -1,0 +1,16 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.name }}
+  description: ${{ values.description }}
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+    backstage.io/kubernetes-id: ${{ values.name }}
+    argocd/app-selector: skylab.io/system=${{ values.name }}
+    grafana/dashboard-selector: "tags @> '${{ values.name }}'"
+    grafana/alert-label-selector: "service=${{ values.name }}"
+spec:
+  type: service
+  lifecycle: ${{ values.lifecycle }}
+  owner: ${{ values.owner }}

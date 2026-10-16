@@ -5,12 +5,14 @@ on:
     paths:
       - 'app/catalog/**'
       - 'app/catalog-info.yaml'
+      - 'app/templates/*/template.yaml'
       - '.github/workflows/catalog.yml'
   push:
     branches: [main]
     paths:
       - 'app/catalog/**'
       - 'app/catalog-info.yaml'
+      - 'app/templates/*/template.yaml'
 
 permissions:
   contents: read
@@ -31,6 +33,7 @@ jobs:
           - app/catalog/org.yaml
           - app/catalog/domains.yaml
           - app/catalog/systems.yaml
+          - app/templates/go-service/template.yaml
     steps:
       - uses: actions/checkout@v4
 
