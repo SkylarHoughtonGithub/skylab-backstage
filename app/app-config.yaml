@@ -240,7 +240,40 @@ catalog:
         - allow: [System]
 
 kubernetes:
-  # see https://backstage.io/docs/features/kubernetes/configuration for kubernetes configuration options
+  # Dev points at the homelab cluster. Spoke clusters get added here (or via
+  # the catalog cluster-locator — see plan.md fleet section) as they come online.
+  serviceLocatorMethod:
+    type: multiTenant
+  clusterLocatorMethods:
+    - type: config
+      clusters:
+        - name: homelab
+          url: ${K8S_HOMELAB_URL}
+          authProvider: serviceAccount
+          serviceAccountToken: ${K8S_HOMELAB_SA_TOKEN}
+          caData: ${K8S_HOMELAB_CA_DATA}
+          skipTLSVerify: false
+          skipMetricsLookup: false
+  customResources:
+    # KubeVela: entity pages for workloads should show the Application + its
+    # defs so the KubeVela side of the stack is visible from Backstage.
+    - group: core.oam.dev
+      apiVersion: v1beta1
+      plural: applications
+    - group: core.oam.dev
+      apiVersion: v1beta1
+      plural: componentdefinitions
+    - group: core.oam.dev
+      apiVersion: v1beta1
+      plural: traitdefinitions
+    # Crossplane: once the gitops wave-2 Configuration lands, these surface
+    # claims/XRs on their owning Components.
+    - group: apiextensions.crossplane.io
+      apiVersion: v1
+      plural: compositeresourcedefinitions
+    - group: pkg.crossplane.io
+      apiVersion: v1
+      plural: providers
 
 # see https://backstage.io/docs/permissions/getting-started for more on the permission framework
 permission:
