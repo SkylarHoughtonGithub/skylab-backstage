@@ -19,6 +19,7 @@ backend.add(import('@backstage/plugin-scaffolder-backend-module-github'));
 backend.add(
   import('@backstage/plugin-scaffolder-backend-module-notifications'),
 );
+backend.add(import('@internal/plugin-scaffolder-backend-module-gitea-pr'));
 
 // techdocs plugin
 backend.add(import('@backstage/plugin-techdocs-backend'));

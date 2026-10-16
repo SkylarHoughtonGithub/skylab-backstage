@@ -142,6 +142,13 @@ integrations:
     # - host: ghe.example.net
     #   apiBaseUrl: https://ghe.example.net/api/v3
     #   token: ${GHE_TOKEN}
+  gitea:
+    # Picked up by the custom scaffolder action gitea:pull-request so templates
+    # can open PRs against platform/tenants. Pass a Gitea PAT as the password.
+    - host: ${GITEA_HOST}
+      baseUrl: ${GITEA_BASE_URL}
+      username: ${GITEA_USERNAME}
+      password: ${GITEA_TOKEN}
 
 proxy:
   ### Example for how to add a proxy endpoint for the frontend.
