@@ -5507,6 +5507,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@internal/plugin-skylab-actions@workspace:^, @internal/plugin-skylab-actions@workspace:plugins/skylab-actions":
+  version: 0.0.0-use.local
+  resolution: "@internal/plugin-skylab-actions@workspace:plugins/skylab-actions"
+  dependencies:
+    "@backstage/backend-plugin-api": "npm:^1.10.1"
+    "@backstage/cli": "npm:^0.36.6"
+  languageName: unknown
+  linkType: soft
+
 "@internationalized/date@npm:^3.12.0, @internationalized/date@npm:^3.12.1, @internationalized/date@npm:^3.12.4":
   version: 3.12.4
   resolution: "@internationalized/date@npm:3.12.4"
@@ -14332,6 +14341,7 @@ __metadata:
     "@backstage/plugin-techdocs-backend": "npm:^2.3.0"
     "@backstage/plugin-user-settings-backend": "npm:^0.4.7"
     "@internal/plugin-scaffolder-backend-module-gitea-pr": "workspace:^"
+    "@internal/plugin-skylab-actions": "workspace:^"
     "@roadiehq/backstage-plugin-argo-cd-backend": "npm:^4.9.0"
     app: "link:../app"
     better-sqlite3: "npm:^12.0.0"

@@ -49,6 +49,7 @@
     "@backstage/plugin-techdocs-backend": "^2.3.0",
     "@backstage/plugin-user-settings-backend": "^0.4.7",
     "@internal/plugin-scaffolder-backend-module-gitea-pr": "workspace:^",
+    "@internal/plugin-skylab-actions": "workspace:^",
     "@roadiehq/backstage-plugin-argo-cd-backend": "^4.9.0",
     "app": "link:../app",
     "better-sqlite3": "^12.0.0",
