@@ -24,7 +24,8 @@
     "clean": "backstage-cli package clean"
   },
   "dependencies": {
-    "@backstage/backend-plugin-api": "^1.10.1"
+    "@backstage/backend-plugin-api": "^1.10.1",
+    "@roadiehq/backstage-plugin-argo-cd-node": "^2.2.0"
   },
   "devDependencies": {
     "@backstage/cli": "^0.36.6"
