@@ -1,4 +1,4 @@
-# CLAUDE.md
+# AGENTS.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
@@ -18,6 +18,7 @@ Legacy content: `tetris-react/`, `infra-templates/`, `workload-templates/` preda
 
 - `main` is protected: branch and open a PR (self-merge, 0 approvals).
 - No `Co-Authored-By` trailers in commit messages.
+- **Conventional Commit PR titles.** PRs squash-merge, so the title becomes the commit on main. `feat:` → minor, `fix:` → patch, `feat!:`/`BREAKING CHANGE:` → major (bumping-minor while pre-1.0). `release-please` watches main and opens a release PR when there's something to ship; merging it cuts the tag, which triggers `image.yml` to publish `ghcr.io/<owner>/skylab-backstage:vX.Y.Z` and dispatches a Renovate run in `skylab-gitops` so the wave-6 pin bumps automatically.
 - Templates skip `catalog:register`; discovery picks up new repos on a schedule.
 
 ## Target repo shape
