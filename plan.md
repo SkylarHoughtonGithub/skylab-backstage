@@ -131,6 +131,10 @@ skylab-backstage/
 - Build, scan with Trivy, sign with cosign, attach an SBOM and push to GHCR.
 - Path filters, so catalog and template changes do not rebuild the image.
 
+### Release strategy
+
+**Live:** release-please + Conventional Commits (`release-type: simple`, single package at repo root). Config in `release-please-config.json`, state in `.release-please-manifest.json`, workflow at `.github/workflows/release-please.yaml`. Decided fleet-wide (see `skylab-gitops/plan.md`); applied here first because this repo was the trial run. PR titles use `feat:`, `fix:`, `chore:` etc; merging opens a release PR that bumps the manifest version and cuts a tag which the image build picks up.
+
 ### Done when
 
 - [ ] A template run opens a PR in `platform/tenants`, the PR merges, and Argo syncs it
@@ -155,14 +159,14 @@ A developer picks a template, fills a short form and gets a running, observable,
 
 ### Order
 
-1. Build the Go service template first and migrate book-api-golang through it.
-2. Add the database template on top of book-api.
+1. Build the Go service template first and migrate **mechatracker** through it (see `mechatracker/plan.md` — includes a Phase 0 Clerk → Google OAuth rework that gates deployment). book-api-golang and chirpy are not used: book-api is being retired, and chirpy was dropped because its Boot.dev-tutorial fingerprint would dilute the portfolio story.
+2. Add the database template on top of **mechatracker** — it already needs Postgres, so one workload proves both #1 and #2.
 3. Add the cluster template once skylab-crossplane ships its handoff.
 4. Add the AI agent template last, with tack-ai as its reference workload.
 
 ### Done when
 
-- [ ] book-api-golang runs from the Go service template with traces, a dashboard and an SLO in Grafana
+- [ ] mechatracker runs from the Go service template with traces, a dashboard and an SLO in Grafana
 - [ ] A new service goes from template to running in under 15 minutes with no manual steps
 
 ---
