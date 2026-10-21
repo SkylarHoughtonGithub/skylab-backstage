@@ -262,6 +262,10 @@ catalog:
       target: ../../templates/go-service/template.yaml
       rules:
         - allow: [Template]
+    - type: file
+      target: ../../templates/database/template.yaml
+      rules:
+        - allow: [Template]
 
 # Roadie's Argo CD plugin — surfaces sync/health per entity. Each instance
 # listed here is a separate Argo CD API endpoint; a single Backstage can

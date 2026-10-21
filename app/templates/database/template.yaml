@@ -1,0 +1,147 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: database
+  title: Postgres database for a service
+  description: |
+    Provision a Postgres database for an existing service via a Crossplane
+    XPostgres XR, delivered as a sibling KubeVela Application in
+    platform/tenants. Opens a pull request against tenants and auto-merges.
+
+    The target service must already exist as `applications/<service>.yaml`
+    in the tenants repo (typically scaffolded by the go-service template).
+
+    After this template runs, add `envFrom: [{ secretRef: { name:
+    <service>-db-conn } }]` to the service component so it picks up the
+    connection details.
+  tags: [recommended, database, postgres, kubevela]
+spec:
+  owner: platform
+  type: resource
+  parameters:
+    - title: Target service
+      required: [service, owner]
+      properties:
+        service:
+          title: Service name
+          type: string
+          description: |
+            Name of the existing service to attach a database to. Must match
+            the service's existing Application file name in platform/tenants.
+          pattern: '^[a-z][a-z0-9-]*$'
+          maxLength: 32
+        owner:
+          title: Owner
+          type: string
+          description: Group or User that owns the database.
+          ui:field: OwnerPicker
+          ui:options:
+            allowedKinds: [Group, User]
+    - title: Database shape
+      required: [cloud, region, version]
+      properties:
+        cloud:
+          title: Cloud
+          type: string
+          enum: [aws, gcp]
+          description: Cloud provider for the Postgres instance.
+        region:
+          title: Region
+          type: string
+          description: AWS region (e.g. us-east-1) or GCP region (e.g. us-central1).
+        version:
+          title: Postgres version
+          type: string
+          enum: ['15', '16', '17']
+          default: '16'
+        storageGB:
+          title: Storage (GB)
+          type: integer
+          default: 20
+          minimum: 10
+          maximum: 1000
+        databaseName:
+          title: Database name
+          type: string
+          default: app
+          pattern: '^[a-z][a-z0-9_]*$'
+          maxLength: 32
+        username:
+          title: Username
+          type: string
+          default: app
+          pattern: '^[a-z][a-z0-9_]*$'
+          maxLength: 32
+    - title: Cloud-specific inputs
+      properties:
+        awsDbSubnetGroupName:
+          title: AWS DB subnet group name
+          type: string
+          description: Required when cloud=aws. The RDS DB subnet group to launch into.
+        awsVpcSecurityGroupIds:
+          title: AWS VPC security group IDs
+          type: array
+          items:
+            type: string
+          description: Required when cloud=aws. Security groups attached to the RDS instance.
+        gcpNetwork:
+          title: GCP VPC self-link
+          type: string
+          description: Required when cloud=gcp. Full VPC self-link for private IP (projects/<proj>/global/networks/<name>).
+    - title: Delivery
+      required: [giteaHost]
+      properties:
+        giteaHost:
+          title: Gitea host
+          type: string
+          description: Gitea host where platform/tenants lives.
+          default: gitea.skylab.local
+  steps:
+    - id: fetch-tenants
+      name: Render database Application
+      action: fetch:template
+      input:
+        url: ./tenants-pr
+        targetPath: tenants-pr
+        values:
+          service: ${{ parameters.service }}
+          owner: ${{ parameters.owner }}
+          cloud: ${{ parameters.cloud }}
+          region: ${{ parameters.region }}
+          version: ${{ parameters.version }}
+          storageGB: ${{ parameters.storageGB }}
+          databaseName: ${{ parameters.databaseName }}
+          username: ${{ parameters.username }}
+          awsDbSubnetGroupName: ${{ parameters.awsDbSubnetGroupName }}
+          awsVpcSecurityGroupIds: ${{ parameters.awsVpcSecurityGroupIds }}
+          gcpNetwork: ${{ parameters.gcpNetwork }}
+
+    - id: tenants-pr
+      name: Open and auto-merge platform/tenants PR
+      action: gitea:pull-request
+      input:
+        repoUrl: ${{ parameters.giteaHost }}?owner=platform&repo=tenants
+        branchName: add-${{ parameters.service }}-db
+        title: 'add Postgres for ${{ parameters.service }}'
+        description: |
+          Adds a sibling KubeVela Application `${{ parameters.service }}-db`
+          that provisions a Crossplane-managed Postgres (`${{ parameters.cloud }}`,
+          Postgres ${{ parameters.version }}, ${{ parameters.storageGB }}GB).
+
+          After this merges and Argo CD syncs:
+          - Update `applications/${{ parameters.service }}.yaml` to add
+            `envFrom: [{ secretRef: { name: ${{ parameters.service }}-db-conn } }]`
+            on the service component.
+          - If there was an interim in-cluster Postgres, remove it in the
+            same edit.
+
+          The password Secret shipped alongside is dev-only. Replace with an
+          ESO ExternalSecret before any production use.
+
+          Generated by the Skylab `database` scaffolder template.
+        automerge: true
+
+  output:
+    links:
+      - title: platform/tenants PR
+        url: ${{ steps['tenants-pr'].output.pullRequestUrl }}
