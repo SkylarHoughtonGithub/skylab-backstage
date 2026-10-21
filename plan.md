@@ -43,7 +43,7 @@ Humans and agents only ever write to Git; Argo CD is the single path into the cl
 7. **AI layer**: model gateway, HolmesGPT, tack-ai remediation, kagent.
 8. **Portfolio finish**: profile README, pins, ADRs.
 
-## Status (as of 2026-10-20)
+## Status (as of 2026-10-21)
 
 Progress through the shared build order:
 
@@ -54,12 +54,12 @@ Progress through the shared build order:
 
 ### Proof-point workload: mechatracker
 
-`mechatracker` (sibling repo) is the first real workload matching the Go service template's shape. Status (as of 2026-10-20):
+`mechatracker` (sibling repo) is the first real workload matching the Go service template's shape. Status (as of 2026-10-21):
 
 - Backend Clerk → Google OAuth rip done; API ships with OTel SDK, distroless base, `/healthz`, Gitea Actions CI–shaped GitHub Actions workflow, root `catalog-info.yaml` + `mkdocs.yml`, and session + middleware unit tests.
 - Web frontend Clerk → Google (`@react-oauth/google`) done; `AuthProvider` + session cookie flow + `/sign-in` + `/onboarding` + `/accept-invite/:token` pages.
-- Deployed to the dev cluster via `skylab-gitops/workloads/mechatracker/` (hand-written KubeVela Application matching what the `go-service` template will emit, plus an interim `k8s-objects` Postgres).
-- Pending: a real `GOOGLE_CLIENT_ID` + `SESSION_SIGNING_KEY` in cluster values to light up end-to-end sign-in; database-template run to replace the interim Postgres with a Crossplane `postgres` XR; `infra/helm/mechatracker/` retirement.
+- Phase 2 cutover hand-wired on the gitops side (`skylab-gitops` #59): interim StatefulSet Postgres is gone; sibling `workloads/mechatracker-db/` Application now provisions Postgres via the `postgres` ComponentDefinition; api `envFrom`'s `db-url`. Dev k3d sits red until wave 1 (Crossplane) flips on with real cloud credentials — expected.
+- Pending: a real `GOOGLE_CLIENT_ID` + `SESSION_SIGNING_KEY` in cluster values to light up end-to-end sign-in; EC2/EKS or GKE cluster with Crossplane + cloud credentials to prove mechatracker-db end-to-end; `infra/helm/mechatracker/` retirement after that proof; ESO-backed password replacing the inline dev secret; migrate Job tied to the `postgres` ComponentDefinition.
 - [ ] 5. Archive the old repos
 - [ ] 6. Golden paths
 - [ ] 7. AI layer (includes tack-ai)
