@@ -114,7 +114,80 @@ describe('createGiteaPullRequestAction', () => {
       'https://gitea.example.com/platform/tenants/pulls/42',
     );
     expect(ctx.outputs.pullRequestNumber).toBe(42);
+    expect(ctx.outputs.merged).toBe(false);
   });
+
+  it('merges the PR when automerge is true', async () => {
+    const fetchMock = jest
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          number: 7,
+          html_url: 'https://gitea.example.com/platform/tenants/pulls/7',
+        }),
+      })
+      .mockResolvedValueOnce({ ok: true, text: async () => '' });
+    (global as any).fetch = fetchMock;
+
+    const action = createGiteaPullRequestAction({ integrations });
+    const ctx = makeContext({
+      repoUrl: 'gitea.example.com?owner=platform&repo=tenants',
+      branchName: 'add-db-foo',
+      title: 'Add db',
+      description: 'auto',
+      automerge: true,
+    });
+
+    await (action as any).handler(ctx);
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    const [mergeUrl, mergeInit] = fetchMock.mock.calls[1];
+    expect(mergeUrl).toBe(
+      'https://gitea.example.com/api/v1/repos/platform/tenants/pulls/7/merge',
+    );
+    expect(mergeInit.headers.Authorization).toBe(expectedBasicAuth);
+    expect(JSON.parse(mergeInit.body)).toEqual({
+      Do: 'squash',
+      delete_branch_after_merge: true,
+    });
+    expect(ctx.outputs.merged).toBe(true);
+  });
+
+  it('retries the merge call on 405 and gives up after a few attempts', async () => {
+    const notReady = {
+      ok: false,
+      status: 405,
+      statusText: 'Method Not Allowed',
+      text: async () => 'Please check your pull request status',
+    };
+    const fetchMock = jest
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          number: 9,
+          html_url: 'https://gitea.example.com/platform/tenants/pulls/9',
+        }),
+      })
+      .mockResolvedValue(notReady);
+    (global as any).fetch = fetchMock;
+
+    const action = createGiteaPullRequestAction({ integrations });
+    const ctx = makeContext({
+      repoUrl: 'gitea.example.com?owner=platform&repo=tenants',
+      branchName: 'b',
+      title: 't',
+      description: 'd',
+      automerge: true,
+    });
+
+    await expect((action as any).handler(ctx)).rejects.toThrow(
+      /Gitea merge API returned 405/,
+    );
+    // 1 create + 5 merge attempts
+    expect(fetchMock).toHaveBeenCalledTimes(6);
+  }, 10000);
 
   it('throws if the host is not configured', async () => {
     const action = createGiteaPullRequestAction({ integrations });

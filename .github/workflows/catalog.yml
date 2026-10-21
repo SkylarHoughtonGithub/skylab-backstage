@@ -34,6 +34,7 @@ jobs:
           - app/catalog/domains.yaml
           - app/catalog/systems.yaml
           - app/templates/go-service/template.yaml
+          - app/templates/database/template.yaml
     steps:
       - uses: actions/checkout@v4
 
