@@ -7,45 +7,31 @@ metadata:
     skylab.io/system: ${{ values.service }}
 spec:
   components:
-    - name: postgres
-      # Postgres provisioning rides on the built-in k8s-objects component
-      # instead of a dedicated `postgres` ComponentDefinition — one less
-      # cross-repo dependency for the MVP. The password Secret below is
-      # dev-only; replace with an ESO ExternalSecret before production use.
-      type: k8s-objects
+    - name: db
+      # Skylab `postgres` ComponentDefinition (skylab-gitops/charts/kubevela-defs).
+      # Emits the XPostgres XR + a compose Job that derives DATABASE_URL
+      # into the `db-url` Secret (named after this component). The service's
+      # Application envFrom's `db-url` to pick up the URL in-namespace.
+      #
+      # Dev-only hardcoded password until ESO-backed Secrets land.
+      type: postgres
       properties:
-        objects:
-          - apiVersion: v1
-            kind: Secret
-            metadata:
-              name: ${{ values.service }}-db-password
-            type: Opaque
-            stringData:
-              password: changeme-dev-only
-          - apiVersion: database.skylab.io/v1alpha1
-            kind: XPostgres
-            metadata:
-              name: ${{ values.service }}
-            spec:
-              cloud: ${{ values.cloud }}
-              region: ${{ values.region }}
-              version: '${{ values.version }}'
-              storageGB: ${{ values.storageGB }}
-              databaseName: ${{ values.databaseName }}
-              username: ${{ values.username }}
-              passwordSecretRef:
-                name: ${{ values.service }}-db-password
-                namespace: ${{ values.service }}
-                key: password
-              {%- if values.cloud == 'aws' %}
-              aws:
-                dbSubnetGroupName: ${{ values.awsDbSubnetGroupName }}
-                vpcSecurityGroupIds:
-                  {%- for sg in values.awsVpcSecurityGroupIds %}
-                  - ${{ sg }}
-                  {%- endfor %}
-              {%- endif %}
-              {%- if values.cloud == 'gcp' %}
-              gcp:
-                network: ${{ values.gcpNetwork }}
-              {%- endif %}
+        cloud: ${{ values.cloud }}
+        region: ${{ values.region }}
+        version: '${{ values.version }}'
+        storageGB: ${{ values.storageGB }}
+        databaseName: ${{ values.databaseName }}
+        username: ${{ values.username }}
+        password: changeme-dev-only
+        {%- if values.cloud == 'aws' %}
+        aws:
+          dbSubnetGroupName: ${{ values.awsDbSubnetGroupName }}
+          vpcSecurityGroupIds:
+            {%- for sg in values.awsVpcSecurityGroupIds %}
+            - ${{ sg }}
+            {%- endfor %}
+        {%- endif %}
+        {%- if values.cloud == 'gcp' %}
+        gcp:
+          network: ${{ values.gcpNetwork }}
+        {%- endif %}
